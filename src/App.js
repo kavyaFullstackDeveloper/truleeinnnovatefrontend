@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import AddCandidateForm from './components/AddCandidateForm';
+import CandidatesTable from './components/CandidatesTable';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [candidates, setCandidates] = useState([]);
+
+  const fetchCandidates = async () => {
+    const res = await axios.get('http://localhost:5000/api/candidates');
+    setCandidates(res.data);
+  };
+
+  useEffect(() => {
+    fetchCandidates();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: '20px' }}>
+      <h1>Candidate Management</h1>
+      <AddCandidateForm onAdd={fetchCandidates} />
+      <CandidatesTable candidates={candidates} />
     </div>
   );
-}
+};
 
 export default App;
