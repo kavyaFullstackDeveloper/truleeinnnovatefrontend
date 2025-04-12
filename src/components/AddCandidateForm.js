@@ -24,7 +24,7 @@ const AddCandidateForm = ({ onAdd }) => {
     };
 
     try {
-      const res = await axios.post('http://localhost:5000/api/candidates', payload);
+      const res = await axios.post('https://truleeinnovate.onrender.com/api/candidates', payload);
       onAdd(res.data);
       setForm({ name: '', phone: '', email: '', gender: '', experience: '', skills: [] });
     } catch (err) {
