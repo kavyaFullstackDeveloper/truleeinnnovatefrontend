@@ -7,7 +7,7 @@ const CandidatesTable = () => {
 
   useEffect(() => {
     // Fetch candidates from backend
-    axios.get('http://localhost:5000/api/candidates')
+    axios.get('https://truleeinnovate.onrender.com/api/candidates')
       .then(res => {
         setCandidates(res.data);
       })
@@ -27,6 +27,19 @@ const CandidatesTable = () => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleDelete = (id) => {
+    // Call backend to delete candidate
+    axios.delete(`https://truleeinnovate.onrender.com/api/candidates/${id}`)
+      .then(res => {
+        console.log(res.data.message);
+        // Remove the deleted candidate from the local state
+        setCandidates(candidates.filter(candidate => candidate._id !== id));
+      })
+      .catch(err => {
+        console.error("Error deleting candidate:", err);
+      });
   };
 
   return (
@@ -51,6 +64,7 @@ const CandidatesTable = () => {
             <th>Gender</th>
             <th>Experience</th>
             <th>Skills</th>
+            <th>Actions</th>  {/* Added column for delete button */}
           </tr>
         </thead>
         <tbody>
@@ -63,11 +77,15 @@ const CandidatesTable = () => {
                 <td>{candidate.gender}</td>
                 <td>{candidate.experience}</td>
                 <td>{candidate.skills.join(', ')}</td>
+                <td>
+                  {/* Delete Button */}
+                  <button onClick={() => handleDelete(candidate._id)}>Delete</button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6">No candidates found</td>
+              <td colSpan="7">No candidates found</td>
             </tr>
           )}
         </tbody>
